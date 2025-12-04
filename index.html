@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mekelle University AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .user-bubble-effect {
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        /* Loading Animations */
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Gemini-style Spinner */
+        .gemini-spinner {
+            animation: spin-slow 3s linear infinite;
+            background: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 2px rgba(66, 133, 244, 0.5));
+        }
+
+        .blinking-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: currentColor;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
+        }
+        @keyframes blink {
+            from, to { opacity: 1 }
+            50% { opacity: 0 }
+        }
+
+        /* Table Styles */
+        .markdown-table-container {
+            overflow-x: auto;
+            margin: 1em 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 100%;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: max-content;
+            color: inherit;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Markdown Typography Improvements */
+        .prose h1 { font-size: 1.75em; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: 700; line-height: 1.2; }
+        .prose h2 { font-size: 1.4em; margin-top: 1.2em; margin-bottom: 0.5em; font-weight: 600; line-height: 1.3; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.2em; }
+        .prose h3 { font-size: 1.2em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 600; }
+        .prose p { margin-bottom: 1em; line-height: 1.6; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+        .prose li { margin-bottom: 0.4em; }
+        .prose strong { font-weight: 700; color: inherit; }
+        .prose blockquote { border-left: 4px solid rgba(255,255,255,0.3); padding-left: 1em; margin: 1em 0; font-style: italic; background: rgba(255,255,255,0.05); padding: 0.5em 1em; border-radius: 0 8px 8px 0; }
+        .prose hr { border-color: rgba(255,255,255,0.2); margin: 2em 0; }
+        
+        /* Math Scrolling - Robust Fix */
+        .katex-display {
+            overflow-x: auto !important;
+            overflow-y: hidden;
+            padding: 0.5rem 0;
+            margin: 0.5rem 0;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .katex-display > .katex {
+            white-space: nowrap !important; 
+            display: inline-block;
+            min-width: 100%;
+        }
+        
+        .katex-html {
+            overflow-x: auto;
+            white-space: nowrap !important;
+        }
+
+        /* Specific fix to ensure formulas don't break lines inside the block */
+        .katex-display .base {
+            white-space: nowrap !important;
+        }
+
+        /* Code Block Styling */
+        pre {
+            overflow-x: auto;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: rgba(0,0,0,0.4) !important;
+            margin: 1rem 0;
+            position: relative;
+            max-width: 100%;
+        }
+        
+        code {
+            font-family: 'Fira Code', monospace, sans-serif;
+            font-size: 0.9em;
+        }
+        
+        /* Copy Button for Code Blocks */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1em 0;
+            max-width: 100%;
+        }
+        
+        .code-copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: #ddd;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .code-block-wrapper:hover .code-copy-btn {
+            opacity: 1;
+        }
+
+        /* Animations */
+        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Themes */
+        .theme-neolight { background: linear-gradient(135deg, #8e44ad, #00ffff); color: #ffffff; }
+        .theme-neolight .glass { background: rgba(255,255,255,0.1); border-radius: 12px; }
+        .theme-neolight .bg-primary { background: rgba(255,255,255,0.15); color: #ffffff; box-shadow: 6px 6px 12px rgba(0,0,0,0.25), -6px -6px 12px rgba(255,255,255,0.2); }
+        .theme-neolight .bg-primary:hover { box-shadow: inset 4px 4px 8px rgba(0,0,0,0.25), inset -4px -4px 8px rgba(255,255,255,0.2); }
+        .theme-neolight .user-bubble { background: rgba(255,255,255,0.2); color: #ffffff; box-shadow: 6px 6px 12px rgba(0,0,0,0.25), -6px -6px 12px rgba(255,255,255,0.2); }
+        .theme-neolight .model-bubble { background: rgba(255,255,255,0.15) !important; color: #ffffff; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.25), inset -6px -6px 12px rgba(255,255,255,0.2) !important; }
+        .theme-neolight .input-opaque { background: rgba(255,255,255,0.15); box-shadow: inset 6px 6px 12px rgba(0,0,0,0.25), inset -6px -6px 12px rgba(255,255,255,0.2); }
+        .theme-neolight .conversation-active { background: rgba(255,255,255,0.25) !important; color: #ffffff !important; box-shadow: 6px 6px 12px rgba(0,0,0,0.25), -6px -6px 12px rgba(255,255,255,0.2); }
+
+        .theme-vibrant { background: linear-gradient(135deg, #6C5CE7, #81D4FA); color: #ffffff; }
+        .theme-vibrant .glass { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.2); }
+        .theme-vibrant .bg-primary { background-color: #6C5CE7; }
+        .theme-vibrant .bg-primary:hover { background-color: #5B4EC9; }
+        .theme-vibrant .user-bubble { background-color: #5558d1; color: white; }
+        .theme-vibrant .model-bubble { background: rgba(255, 255, 255, 0.1) !important; border-color: rgba(255, 255, 255, 0.2) !important; }
+        .theme-vibrant .conversation-active { background-color: #6C5CE7 !important; }
+        .theme-vibrant .input-opaque { background-color: #6C5CE7; }
+
+        .theme-neodark { background: #1c1c1e; color: #e5e5e5; }
+        .theme-neodark .glass { background: #1c1c1e; box-shadow: 8px 8px 16px rgba(0,0,0,0.55), -8px -8px 16px rgba(255,255,255,0.08); }
+        .theme-neodark .bg-primary { background: #1c1c1e; box-shadow: 6px 6px 12px rgba(0,0,0,0.55), -6px -6px 12px rgba(255,255,255,0.08); }
+        .theme-neodark .bg-primary:hover { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.55), inset -5px -5px 10px rgba(255,255,255,0.08); }
+        .theme-neodark .user-bubble { background: #1c1c1e; color: #f0f0f0; box-shadow: 6px 6px 12px rgba(0,0,0,0.55), -6px -6px 12px rgba(255,255,255,0.08); }
+        .theme-neodark .model-bubble { background: #1c1c1e !important; color: #eaeaea; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.55), inset -6px -6px 12px rgba(255,255,255,0.08) !important; }
+        .theme-neodark .input-opaque { background: #1c1c1e; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.55), inset -6px -6px 12px rgba(255,255,255,0.08); }
+        .theme-neodark .conversation-active { background: #232325 !important; box-shadow: 6px 6px 12px rgba(0,0,0,0.55), -6px -6px 12px rgba(255,255,255,0.08); }
+
+        .theme-mekelle { background: #002244; color: #ffffff; background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZzEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDIyNDQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDc2QkQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2cxKSIvPjwvc3ZnPg=="); }
+        .theme-mekelle .glass { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.4); }
+        .theme-mekelle .bg-primary { background-color: #007FFF; color: #ffffff; }
+        .theme-mekelle .bg-primary:hover { background-color: #006ED0; }
+        .theme-mekelle .user-bubble { background-color: #007FFF; color: #ffffff; }
+        .theme-mekelle .model-bubble { background: rgba(255, 255, 255, 0.2) !important; border-color: rgba(255, 255, 255, 0.5) !important; }
+        .theme-mekelle .conversation-active { background-color: #00A86B !important; }
+        .theme-mekelle .input-opaque { background-color: #007FFF; }
+        .theme-mekelle .text-primary { color: #00A86B; }
+        .theme-mekelle .text-secondary { color: #B0C4DE; }
+
+        .theme-futuristic { background: #101113; color: #00F0FF; background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZzEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxMDExMTMiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMzMwMzMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2cyKSIvPjwvc3ZnPg=="); }
+        .theme-futuristic .glass { backdrop-filter: blur(30px); background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2); box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); color: #E0FFFF; }
+        .theme-futuristic .bg-primary { background-color: #00F0FF; color: #101113; text-shadow: 0 0 5px #00F0FF; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+        .theme-futuristic .user-bubble { background-color: #00F0FF; color: #101113; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important; }
+        .theme-futuristic .model-bubble { background: rgba(0, 240, 255, 0.03) !important; border-color: rgba(0, 240, 255, 0.15) !important; box-shadow: 0 0 10px rgba(0, 240, 255, 0.4) !important; }
+        .theme-futuristic .input-opaque { background-color: #ffF0FF; }
+        .theme-futuristic .text-primary { color: #00F0FF; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "react-markdown": "https://aistudiocdn.com/react-markdown@^10.1.0",
+    "remark-math": "https://aistudiocdn.com/remark-math@^6.0.0",
+    "remark-gfm": "https://aistudiocdn.com/remark-gfm@^4.0.0",
+    "rehype-katex": "https://aistudiocdn.com/rehype-katex@^7.0.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.6.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body id="root">
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
