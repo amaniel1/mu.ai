@@ -1,7 +1,7 @@
 import { GoogleGenAI, Content, Part } from "@google/genai";
 import { UserProfile, ModelMode } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: "AIzaSyAEkOlcQlctxcG-QC5itPEJ5PezrrdCNZ4" });
 
 const specificIdentityAnswer = "I am Mekelle University student's assistant created by Amaniel Niguse, a senior student in Mekelle University in the Department of Economics. Contact my creator Telegram = @Amax.V2  Email = amanial.v2@gmail.com\n Thank you @2025 Amaniel Niguse";
 
